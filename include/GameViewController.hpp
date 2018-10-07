@@ -9,7 +9,7 @@ class GameViewController {
 public:
     GameViewController(Board &board, GameView &gameView, std::size_t rows, std::size_t cols);
 
-    void gameLoop();
+    int gameLoop();
 
 private:
     Board &board_;
