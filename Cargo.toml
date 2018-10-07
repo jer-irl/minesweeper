@@ -1,0 +1,6 @@
+[package]
+name = "rustyminesweeper"
+version = "0.1.0"
+authors = ["Jeremy Schroeder <jpschroeder2014@gmail.com>"]
+
+[dependencies]
