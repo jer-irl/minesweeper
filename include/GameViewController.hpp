@@ -1,9 +1,11 @@
 #pragma once
 
-#include "Game.hpp"
-#include "GameView.hpp"
+#include <cstddef>
 
 namespace minesweeper {
+
+struct Board;
+struct GameView;
 
 class GameViewController {
 public:

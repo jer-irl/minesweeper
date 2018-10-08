@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game.h"
+#include <cstddef>
 
 namespace minesweeper {
 
@@ -15,8 +15,13 @@ public:
     void drawPrompt() const;
 
 private:
+    void moveCursorInTerm(std::size_t trow, std::size_t tcol) const;
+    void drawCharInTerm(std::size_t trow, std::size_t tcol) const;
+
     std::size_t rows_;
     std::size_t cols_;
+    std::size_t trows_;
+    std::size_t tcols_;
 };
 
 } // ns minesweeper
