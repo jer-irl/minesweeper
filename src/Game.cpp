@@ -41,8 +41,8 @@ Board::Board(std::size_t rows, std::size_t cols, std::size_t mines)
 
     std::random_device rd;
     std::default_random_engine rng(rd());
-    std::uniform_int_distribution<std::size_t> rowGen(0, rows);
-    std::uniform_int_distribution<std::size_t> colGen(0, cols);
+    std::uniform_int_distribution<std::size_t> rowGen(0, rows - 1);
+    std::uniform_int_distribution<std::size_t> colGen(0, cols - 1);
 
     std::size_t minesGenerated = 0;
     while(minesGenerated < mines) {

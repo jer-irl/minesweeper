@@ -1,97 +1,65 @@
 #include "GameView.hpp"
-#include <iostream>
 #include <string>
 
 namespace minesweeper {
 
 GameView::GameView(std::size_t rows, std::size_t cols)
         : rows_(rows), cols_(cols) {
-    auto [trows, tcols] = getTermSize();
-    trows_ = trows;
-    tcols_ = tcols;
+    initscr();
+    noecho();
+    cbreak();
+    keypad(stdscr, true);
 
-    drawHeader();
-    drawBorder();
-    drawPrompt();
+    getmaxyx(stdscr, trows_, tcols_);
+
+    titleBarWin_ = newwin(3, tcols_, 0, 0);
+    box(titleBarWin_, 0, 0);
+    mvwprintw(titleBarWin_, 1, 1, "HERE");
+    wrefresh(titleBarWin_);
+
+    boardWin_ = newwin(rows + 2, cols + 2, 5, 0);
+    box(boardWin_, 0, 0);
+    wrefresh(boardWin_);
 }
 
-void GameView::sendCSI() const {
-    std::cout << '\x1b' << '[';
+GameView::~GameView() {
+    delwin(titleBarWin_);
+    delwin(boardWin_);
+    delwin(promptWin_);
+    endwin();
 }
 
-void GameView::sendCUP(std::size_t trow, std::size_t tcol) const {
-    sendCSI();
-    std::cout << trow << ';' << tcol << 'H';
-}
+std::tuple<std::size_t, std::size_t> GameView::getInputSquare() const {
+    while (true) {
+        int inChar = getch();
+        switch (inChar) {
+            case KEY_ENTER:
+            case ' ':
+                int row, col;
+                getyx(boardWin_, row, col);
+                return std::tuple(row, col);
+            case KEY_LEFT:
+                // TODO
+                break;
+            case KEY_UP:
+                // TODO
+                break;
+            case KEY_RIGHT:
+                // TODO
+                break;
+            case KEY_DOWN:
+                // TODO
+                break;
+            case 'q':
 
-void GameView::sendDSR() const {
-    sendCSI();
-    std::cout << "6n";
-}
-
-std::tuple<std::size_t, std::size_t> GameView::getTermSize() const {
-    sendCUP(999, 999);
-    sendDSR();
-
-    std::string termResponse;
-    std::cin >> termResponse;
-    assert(termResponse[0] == '\x1b' && termResponse[1] == '[');
-
-    std::string n;
-    char *ptr = &termResponse[2];
-    while (*ptr != ';') {
-        n += *ptr;
-        ++ptr;
-    }
-    ++ptr;
-
-    std::string m;
-    while (*ptr != 'R') {
-        m += *ptr;
-        ++ptr;
-    }
-
-    return std::tuple(std::stoull(n), std::stoll(m));
-}
-
-void GameView::moveCursorInTerm(std::size_t trow, std::size_t tcol) const {
-    sendCUP(trow, tcol);
-}
-
-void GameView::drawCharInTerm(char c, std::size_t trow, std::size_t tcol) const {
-    moveCursorInTerm(trow, tcol);
-    std::cout << c;
-}
-
-void GameView::drawHeader() const {
-    moveCursorInTerm(1, 1);
-    std::cout << "Welcome to minesweeper!";
-}
-
-void GameView::drawPrompt() const {
-    moveCursorInTerm(trows_, 1);
-    std::cout << "This is the prompt";
-}
-
-void GameView::drawBorder() const {
-    moveCursorInTerm(3, 1);
-    for (std::size_t i = 0; i < cols_ + 2; ++i) {
-        std::cout << "-";
-    }
-    for (std::size_t i = 4; i < rows_ + 4; ++i) {
-        moveCursorInTerm(i, 1);
-        std::cout << "|";
-        // TODO right border
-    }
-    moveCursorInTerm(rows_ + 4, 1);
-    for (std::size_t i = 0; i < cols_ + 2; ++i) {
-        std::cout << "-";
+            default:
+                break;
+        }
     }
 }
 
 void GameView::drawCharOnBoard(char c, std::size_t row, std::size_t col) const {
-    moveCursorInTerm(row + 3, col + 2);
-    std::cout << c;
+    mvwaddch(boardWin_, row, col, c);
 }
 
 } // ns minesweeper

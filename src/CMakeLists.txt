@@ -4,3 +4,5 @@ add_executable(minesweeper
     GameView.cpp
     GameViewController.cpp
     )
+
+target_link_libraries(minesweeper ncurses)

@@ -18,7 +18,12 @@ int GameViewController::gameLoop() {
         }
     }
 
-    // TODO
+    while (true) {
+        auto [row, col] = gameView_.getInputSquare();
+        if (board_.tileAt(row, col)->getState() == TileType::Mine) {
+            break;
+        }
+    }
 
     return 0;
 }
