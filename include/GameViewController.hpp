@@ -5,7 +5,8 @@
 namespace minesweeper {
 
 struct Board;
-struct GameView;
+struct Tile;
+class GameView;
 
 class GameViewController {
 public:
@@ -14,6 +15,8 @@ public:
     int gameLoop();
 
 private:
+    void drawTile(const Tile &tile) const;
+
     Board &board_;
     GameView &gameView_;
     std::size_t rows_;

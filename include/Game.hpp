@@ -4,8 +4,8 @@
 
 namespace minesweeper {
 
-enum class TileState {
-    Normal, Mine, Exploded
+enum class TileType {
+    Normal, Mine
 };
 
 struct Board;
@@ -16,18 +16,26 @@ public:
 
     std::size_t numNeighboringMines() const;
 
-    void setState(TileState state) {
+    void setState(TileType state) {
         state_ = state;
     }
 
-    TileState getState() const {
+    TileType getState() const {
         return state_;
+    }
+
+    std::size_t getRow() const {
+        return row_;
+    }
+
+    std::size_t getCol() const {
+        return col_;
     }
 
 private:
     const std::size_t row_;
     const std::size_t col_;
-    TileState state_;
+    TileType state_;
     const Board &board_;
 };
 

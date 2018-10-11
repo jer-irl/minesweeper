@@ -1,9 +1,11 @@
 #include "Game.hpp"
 
+#include <random>
+
 namespace minesweeper {
 
 Tile::Tile(std::size_t row, std::size_t col, const Board &board)
-        : board_(board), row_(row), col_(col), state_(TileState::Normal) {
+        : board_(board), row_(row), col_(col), state_(TileType::Normal) {
 }
 
 std::size_t Tile::numNeighboringMines() const {
@@ -19,7 +21,7 @@ std::size_t Tile::numNeighboringMines() const {
                 continue;
             }
 
-            if (t->state_ == TileState::Mine) {
+            if (t->state_ == TileType::Mine) {
                 ++result;
             }
         }
@@ -37,9 +39,24 @@ Board::Board(std::size_t rows, std::size_t cols, std::size_t mines)
         }
     }
 
+    std::random_device rd;
+    std::default_random_engine rng(rd());
+    std::uniform_int_distribution<std::size_t> rowGen(0, rows);
+    std::uniform_int_distribution<std::size_t> colGen(0, cols);
+
     std::size_t minesGenerated = 0;
     while(minesGenerated < mines) {
-        // TODO generate mine
+        std::size_t randRow = rowGen(rng);
+        std::size_t randCol = colGen(rng);
+
+        Tile *tile = tileAt(randRow, randCol);
+
+        if (tile->getState() == TileType::Mine) {
+            continue;
+        }
+
+        tile->setState(TileType::Mine);
+        ++minesGenerated;
     }
 }
 
