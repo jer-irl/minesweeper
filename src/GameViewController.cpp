@@ -3,6 +3,10 @@
 #include "Game.hpp"
 #include "GameView.hpp"
 
+// TODO
+#include <thread>
+#include <chrono>
+
 namespace minesweeper {
 
 GameViewController::GameViewController(
@@ -46,7 +50,6 @@ void GameViewController::drawBoard() const {
             drawTile(*tile);
         }
     }
-    gameView_.refreshView();
 }
 
 void GameViewController::drawTile(const Tile &tile) const {

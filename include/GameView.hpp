@@ -16,8 +16,6 @@ public:
 
     void drawCharOnBoard(char c, std::size_t row, std::size_t col) const;
 
-    void refreshView() const;
-
 private:
     void moveCurOnBoard(std::size_t row, std::size_t col);
     void replaceCurOnBoard() const;
