@@ -5,9 +5,9 @@
 #include <iostream>
 
 int main(int argc, char *argv[]) {
-    std::size_t rows = 50;
-    std::size_t cols = 50;
-    std::size_t mines = 20;
+    std::size_t rows = 20;
+    std::size_t cols = 20;
+    std::size_t mines = 10;
     std::size_t argIdx = 1;
 
     while (argIdx < argc) {
@@ -32,5 +32,6 @@ int main(int argc, char *argv[]) {
     minesweeper::Board board(rows, cols, mines);
     minesweeper::GameViewController controller(board, gameView, rows, cols);
 
+    controller.drawBoard();
     return controller.gameLoop();
 }

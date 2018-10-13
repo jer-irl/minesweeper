@@ -12,6 +12,8 @@ class GameViewController {
 public:
     GameViewController(Board &board, GameView &gameView, std::size_t rows, std::size_t cols);
 
+    void drawBoard() const;
+
     int gameLoop();
 
 private:

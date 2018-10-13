@@ -11,9 +11,12 @@ public:
     GameView(std::size_t rows, std::size_t cols);
     ~GameView();
 
-    std::tuple<std::size_t, std::size_t> getInputSquare() const;
+    int getInputChar() const;
+    std::tuple<std::size_t, std::size_t> currentTile() const;
 
     void drawCharOnBoard(char c, std::size_t row, std::size_t col) const;
+
+    void refreshView() const;
 
 private:
     WINDOW *titleBarWin_;

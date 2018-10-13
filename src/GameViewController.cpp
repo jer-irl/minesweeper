@@ -11,21 +11,42 @@ GameViewController::GameViewController(
 }
 
 int GameViewController::gameLoop() {
+    while (true) {
+        int c = gameView_.getInputChar();
+        switch (c) {
+            case 'q':
+                return 0;
+
+            case ' ':
+            case KEY_ENTER: {
+                auto[row, col] = gameView_.currentTile();
+                Tile *tile = board_.tileAt(row, col);
+                if (!tile) {
+                    throw std::exception();
+                } else if (tile->getState() == TileType::Mine) {
+                    return 1;
+                } else if (tile->getState() == TileType::Normal) {
+                    return 1;
+                }
+                break;
+            }
+
+            default:
+                throw std::exception();
+        }
+    }
+
+    return 0;
+}
+
+void GameViewController::drawBoard() const {
     for (std::size_t row = 0; row < rows_; ++row) {
         for (std::size_t col = 0; col < cols_; ++col) {
             const Tile *tile = board_.tileAt(row, col);
             drawTile(*tile);
         }
     }
-
-    while (true) {
-        auto [row, col] = gameView_.getInputSquare();
-        if (board_.tileAt(row, col)->getState() == TileType::Mine) {
-            break;
-        }
-    }
-
-    return 0;
+    gameView_.refreshView();
 }
 
 void GameViewController::drawTile(const Tile &tile) const {
