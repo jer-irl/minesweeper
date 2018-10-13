@@ -5,7 +5,7 @@
 namespace minesweeper {
 
 Tile::Tile(std::size_t row, std::size_t col, const Board &board)
-        : board_(board), row_(row), col_(col), state_(TileType::Normal) {
+        : board_(board), row_(row), col_(col), type_(TileType::Normal), displayType_(DisplayType::Hidden) {
 }
 
 std::size_t Tile::numNeighboringMines() const {
@@ -21,7 +21,7 @@ std::size_t Tile::numNeighboringMines() const {
                 continue;
             }
 
-            if (t->state_ == TileType::Mine) {
+            if (t->type_ == TileType::Mine) {
                 ++result;
             }
         }
@@ -51,11 +51,11 @@ Board::Board(std::size_t rows, std::size_t cols, std::size_t mines)
 
         Tile *tile = tileAt(randRow, randCol);
 
-        if (tile->getState() == TileType::Mine) {
+        if (tile->getType() == TileType::Mine) {
             continue;
         }
 
-        tile->setState(TileType::Mine);
+        tile->setType(TileType::Mine);
         ++minesGenerated;
     }
 }

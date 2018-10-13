@@ -13,6 +13,7 @@ public:
     GameViewController(Board &board, GameView &gameView, std::size_t rows, std::size_t cols);
 
     void drawBoard() const;
+    void revealBoard() const;
 
     int gameLoop();
 

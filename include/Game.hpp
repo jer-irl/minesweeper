@@ -8,6 +8,10 @@ enum class TileType {
     Normal, Mine
 };
 
+enum class DisplayType {
+    Exploded, Hidden, Flagged, Cleared, Displaying
+};
+
 struct Board;
 
 struct Tile {
@@ -16,12 +20,12 @@ public:
 
     std::size_t numNeighboringMines() const;
 
-    void setState(TileType state) {
-        state_ = state;
+    void setType(TileType type) {
+        type_ = type;
     }
 
-    TileType getState() const {
-        return state_;
+    TileType getType() const {
+        return type_;
     }
 
     std::size_t getRow() const {
@@ -32,11 +36,20 @@ public:
         return col_;
     }
 
+    void setDisplayType(DisplayType displayType) {
+        displayType_ = displayType;
+    }
+
+    DisplayType getDisplayType() const {
+        return displayType_;
+    }
+
 private:
     const std::size_t row_;
     const std::size_t col_;
-    TileType state_;
+    TileType type_;
     const Board &board_;
+    DisplayType displayType_;
 };
 
 struct Board {

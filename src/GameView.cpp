@@ -68,7 +68,7 @@ int GameView::getInputChar() {
 std::tuple<std::size_t, std::size_t> GameView::currentTile() const {
     int x, y;
     getyx(boardWin_, y, x);
-    return std::tuple(x, y);
+    return std::tuple(y - 1, x - 1);
 }
 
 void GameView::drawCharOnBoard(char c, std::size_t row, std::size_t col) const {
