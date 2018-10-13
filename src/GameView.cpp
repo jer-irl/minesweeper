@@ -1,6 +1,10 @@
 #include "GameView.hpp"
 #include <string>
 
+// TODO
+#include <chrono>
+#include <thread>
+
 namespace minesweeper {
 
 GameView::GameView(std::size_t rows, std::size_t cols)
@@ -12,14 +16,16 @@ GameView::GameView(std::size_t rows, std::size_t cols)
 
     getmaxyx(stdscr, trows_, tcols_);
 
-    titleBarWin_ = subwin(stdscr, 3, tcols_, 0, 0);
+    titleBarWin_ = derwin(stdscr, 3, tcols_, 0, 0);
     box(titleBarWin_, 0, 0);
     mvwprintw(titleBarWin_, 1, 1, "HERE");
     wrefresh(titleBarWin_);
 
-    boardWin_ = subwin(stdscr, rows + 2, cols + 2, 5, 0);
+    boardWin_ = derwin(stdscr, rows + 2, cols + 2, 5, 0);
     box(boardWin_, 0, 0);
     wrefresh(boardWin_);
+
+    moveCurOnBoard(0, 0);
 }
 
 GameView::~GameView() {
@@ -29,11 +35,12 @@ GameView::~GameView() {
     endwin();
 }
 
-int GameView::getInputChar() const {
+int GameView::getInputChar() {
     while (true) {
         int inChar = getch();
         switch (inChar) {
             case KEY_LEFT:
+                moveCurOnBoard(0, 0);
                 // TODO
                 break;
             case KEY_UP:
@@ -59,12 +66,25 @@ std::tuple<std::size_t, std::size_t> GameView::currentTile() const {
 }
 
 void GameView::drawCharOnBoard(char c, std::size_t row, std::size_t col) const {
-    mvwaddch(boardWin_, row, col, c);
+    mvwaddch(boardWin_, row + 1, col + 1, c);
     wrefresh(boardWin_);
+    replaceCurOnBoard();
 }
 
 void GameView::refreshView() const {
+    replaceCurOnBoard();
     refresh();
+}
+
+void GameView::moveCurOnBoard(std::size_t row, std::size_t col) {
+    curRow_ = row;
+    curCol_ = col;
+    replaceCurOnBoard();
+}
+
+void GameView::replaceCurOnBoard() const {
+    wmove(boardWin_, curRow_ + 1, curCol_ + 1);
+    wrefresh(boardWin_);
 }
 
 } // ns minesweeper
