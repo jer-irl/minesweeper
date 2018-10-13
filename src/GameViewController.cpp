@@ -22,7 +22,9 @@ int GameViewController::gameLoop() {
                 return 0;
 
             case ' ':
-            case KEY_ENTER: {
+            case '\n':
+            case KEY_ENTER:
+            case '\r': {
                 auto[row, col] = gameView_.currentTile();
                 Tile *tile = board_.tileAt(row, col);
                 if (!tile) {
