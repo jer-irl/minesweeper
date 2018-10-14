@@ -60,7 +60,7 @@ void GameViewController::drawTile(const Tile &tile) const {
     char toDraw;
     switch (tile.getDisplayType()) {
         case DisplayType::Hidden:
-            toDraw = 'U';
+            toDraw = '.';
             break;
         case DisplayType::Exploded:
             toDraw = 'E';
@@ -69,7 +69,7 @@ void GameViewController::drawTile(const Tile &tile) const {
             if (std::size_t neighboring = tile.numNeighboringMines()) {
                 toDraw = std::to_string(neighboring)[0];
             } else {
-                toDraw = '.';
+                toDraw = ' ';
             }
             break;
         case DisplayType::Flagged:

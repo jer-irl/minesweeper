@@ -17,7 +17,7 @@ GameView::GameView(std::size_t rows, std::size_t cols)
 
     titleBarWin_ = derwin(stdscr, 3, tcols_, 0, 0);
     box(titleBarWin_, 0, 0);
-    mvwprintw(titleBarWin_, 1, 1, "HERE");
+    mvwprintw(titleBarWin_, 1, 1, "Welcome to Minesweeper!");
     wrefresh(titleBarWin_);
 
     boardWin_ = derwin(stdscr, rows + 2, cols + 2, 5, 0);
