@@ -1,0 +1,2 @@
+# Minesweeper
+This is a quick project I did to stay nimble on C++ skills.  It's not algorithmically optimal, nor was it supposed to be.  I did it to practice the MVC pattern outside of iOS development, and also to learn ncurses.  ncurses is required to compile.
