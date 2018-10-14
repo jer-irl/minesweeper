@@ -1,6 +1,7 @@
 #include "Game.hpp"
 
 #include <random>
+#include <algorithm>
 
 namespace minesweeper {
 
@@ -9,25 +10,10 @@ Tile::Tile(std::size_t row, std::size_t col, const Board &board)
 }
 
 std::size_t Tile::numNeighboringMines() const {
-    std::size_t result = 0;
-
-    for (int row = static_cast<int>(row_) - 1; row < row_ + 2; ++row) {
-        for (int col = static_cast<int>(col_) - 1; col < col_ + 2; ++col) {
-            if (row < 0 || col < 0) {
-                continue;
-            }
-            const Tile *t = board_.tileAt(static_cast<std::size_t>(row), static_cast<std::size_t>(col));
-            if (!t || t == this) {
-                continue;
-            }
-
-            if (t->type_ == TileType::Mine) {
-                ++result;
-            }
-        }
-    }
-
-    return result;
+    std::vector<std::reference_wrapper<const Tile>> neighbors = board_.neighborsForTile(*this);
+    return static_cast<std::size_t>(std::count_if(neighbors.begin(), neighbors.end(), [](std::reference_wrapper<const Tile> t){
+        return t.get().getType() == TileType::Mine;
+    }));
 }
 
 Board::Board(std::size_t rows, std::size_t cols, std::size_t mines)
@@ -72,6 +58,64 @@ Tile *Board::tileAt(std::size_t row, std::size_t col) {
         return nullptr;
     }
     return &tiles_[(row * cols_) + col];
+}
+
+std::vector<std::reference_wrapper<Tile>> Board::tilesToRevealOnClick(minesweeper::Tile &tile) {
+    std::vector<std::reference_wrapper<Tile>> res;
+    tilesToRevealOnClickHelper(tile, res);
+    return res;
+}
+
+void Board::tilesToRevealOnClickHelper(
+        minesweeper::Tile &tile, std::vector<std::reference_wrapper<minesweeper::Tile>> &res) {
+    res.emplace_back(tile);
+
+    if (tile.numNeighboringMines() == 0) {
+        auto neighbors = neighborsForTile(tile);
+        for (Tile &t : neighbors) {
+            if (std::none_of(res.begin(), res.end(), [&t](std::reference_wrapper<Tile> s){return &s.get() == &t;})) {
+                tilesToRevealOnClickHelper(t, res);
+            }
+        }
+    }
+}
+
+std::vector<std::reference_wrapper<Tile>> Board::neighborsForTile(minesweeper::Tile &tile) {
+    std::vector<std::reference_wrapper<Tile>> res;
+
+    int tileRow = static_cast<int>(tile.getRow());
+    int tileCol = static_cast<int>(tile.getCol());
+    for (int row = tileRow - 1; row < tileRow + 2; ++row) {
+        for (int col = tileCol - 1; col < tileCol + 2; ++col) {
+            Tile *t = tileAt(static_cast<std::size_t>(row), static_cast<std::size_t>(col));
+
+            if (!t || t == &tile) {
+                continue;
+            }
+
+            res.emplace_back(std::ref(*t));
+        }
+    }
+    return res;
+}
+
+std::vector<std::reference_wrapper<const Tile>> Board::neighborsForTile(const minesweeper::Tile &tile) const {
+    std::vector<std::reference_wrapper<const Tile>> res;
+
+    int tileRow = static_cast<int>(tile.getRow());
+    int tileCol = static_cast<int>(tile.getCol());
+    for (int row = tileRow - 1; row < tileRow + 2; ++row) {
+        for (int col = tileCol - 1; col < tileCol + 2; ++col) {
+            const Tile *t = tileAt(static_cast<std::size_t>(row), static_cast<std::size_t>(col));
+
+            if (!t || t == &tile) {
+                continue;
+            }
+
+            res.emplace_back(std::ref(*t));
+        }
+    }
+    return res;
 }
 
 } // ns minesweeper

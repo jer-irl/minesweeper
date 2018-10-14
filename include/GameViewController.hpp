@@ -19,6 +19,7 @@ public:
 
 private:
     void drawTile(const Tile &tile) const;
+    void clickTile(Tile &tile);
 
     Board &board_;
     GameView &gameView_;

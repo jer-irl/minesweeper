@@ -37,9 +37,7 @@ int GameViewController::gameLoop() {
                     drawTile(*tile);
                     revealBoard();
                 } else if (tile->getType() == TileType::Normal) {
-                    tile->setDisplayType(DisplayType::Cleared);
-                    drawTile(*tile);
-                    // TODO: Reveal other tiles
+                    clickTile(*tile);
                 }
                 break;
 
@@ -47,8 +45,6 @@ int GameViewController::gameLoop() {
                 throw std::runtime_error("Unrecognized input character");
         }
     }
-
-    return 0;
 }
 
 void GameViewController::drawBoard() const {
@@ -70,10 +66,11 @@ void GameViewController::drawTile(const Tile &tile) const {
             toDraw = 'E';
             break;
         case DisplayType::Cleared:
-            toDraw = '.';
-            break;
-        case DisplayType::Displaying:
-            toDraw = std::to_string(tile.numNeighboringMines())[0];
+            if (std::size_t neighboring = tile.numNeighboringMines()) {
+                toDraw = std::to_string(neighboring)[0];
+            } else {
+                toDraw = '.';
+            }
             break;
         case DisplayType::Flagged:
             toDraw = 'F';
@@ -90,6 +87,14 @@ void GameViewController::revealBoard() const {
                 gameView_.drawCharOnBoard('*', row, col);
             }
         }
+    }
+}
+
+void GameViewController::clickTile(minesweeper::Tile &tile) {
+    auto tilesToReveal = board_.tilesToRevealOnClick(tile);
+    for (Tile &t : tilesToReveal) {
+        t.setDisplayType(DisplayType::Cleared);
+        drawTile(tile);
     }
 }
 

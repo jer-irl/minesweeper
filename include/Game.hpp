@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 
 namespace minesweeper {
 
@@ -9,7 +10,7 @@ enum class TileType {
 };
 
 enum class DisplayType {
-    Exploded, Hidden, Flagged, Cleared, Displaying
+    Exploded, Hidden, Flagged, Cleared
 };
 
 struct Board;
@@ -59,7 +60,14 @@ public:
     const Tile *tileAt(std::size_t row, std::size_t col) const;
     Tile *tileAt(std::size_t row, std::size_t col);
 
+    std::vector<std::reference_wrapper<Tile>> tilesToRevealOnClick(Tile &tile);
+
+    std::vector<std::reference_wrapper<Tile>> neighborsForTile(Tile& tile);
+    std::vector<std::reference_wrapper<const Tile>> neighborsForTile(const Tile& tile) const;
+
 private:
+    void tilesToRevealOnClickHelper(Tile &tile, std::vector<std::reference_wrapper<Tile>> &res);
+
     std::vector<Tile> tiles_;
     const std::size_t rows_;
     const std::size_t cols_;
