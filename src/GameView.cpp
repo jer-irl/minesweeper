@@ -22,6 +22,7 @@ GameView::GameView(std::size_t rows, std::size_t cols)
 
     boardWin_ = derwin(stdscr, rows + 2, cols + 2, 5, 0);
     keypad(boardWin_, true);
+    nodelay(boardWin_, false);
     box(boardWin_, 0, 0);
     wrefresh(boardWin_);
 

@@ -42,7 +42,7 @@ int GameViewController::gameLoop() {
                 break;
 
             default:
-                throw std::runtime_error("Unrecognized input character");
+                break;
         }
     }
 }
@@ -94,7 +94,7 @@ void GameViewController::clickTile(minesweeper::Tile &tile) {
     auto tilesToReveal = board_.tilesToRevealOnClick(tile);
     for (Tile &t : tilesToReveal) {
         t.setDisplayType(DisplayType::Cleared);
-        drawTile(tile);
+        drawTile(t);
     }
 }
 
